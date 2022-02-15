@@ -2,6 +2,7 @@ package ru.stqa.pft.addressbook.tests;
 
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
+import ru.stqa.pft.addressbook.appmanager.TestBase;
 
 public class NewContact extends TestBase {
 
@@ -9,7 +10,7 @@ public class NewContact extends TestBase {
         public void testNewContact() throws Exception {
 
             app.driver.findElement(By.linkText("add new")).click();
-        app.fillNewContact("Anastasiia", "Test", "anatest", "FirstTest", "Tix", "123987654", "test@mail.com");
+        app.getNewContactHelper().fillNewContact("Anastasiia", "Test", "anatest", "FirstTest", "Tix", "123987654", "test@mail.com");
     }
 
 
