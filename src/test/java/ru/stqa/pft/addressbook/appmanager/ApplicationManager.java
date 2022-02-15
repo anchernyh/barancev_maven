@@ -1,48 +1,34 @@
-package ru.stqa.pft.addressbook;
+package ru.stqa.pft.addressbook.appmanager;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.Select;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import java.util.regex.Pattern;
-import java.util.concurrent.TimeUnit;
-
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.testng.annotations.*;
-import static org.testng.Assert.*;
-import org.openqa.selenium.*;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.fail;
 
-public class TestBase {
+public class ApplicationManager {
 
-
-    protected WebDriver driver;
-    private String baseUrl;
+    public WebDriver driver;
     protected StringBuffer verificationErrors = new StringBuffer();
-
-    @BeforeClass(alwaysRun = true)
-    public void setUp() throws Exception {
-      System.setProperty("webdriver.gecko.driver", "C://Users/chernykh/Downloads/geckodriver-v0.30.0-win64/geckodriver.exe");
-      DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-      capabilities.setCapability("marionette", true);
-      //WebDriver driver = new MarionetteDriver(capabilities);
-      driver = new FirefoxDriver();
-      baseUrl = "https://www.google.com/";
-      driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-      driver.get("http://localhost/addressbook/");
-      loginAddressbook("admin", "secret");
-    }
+    private String baseUrl;
     private boolean acceptNextAlert = true;
 
+    public void init() {
+        System.setProperty("webdriver.gecko.driver", "C://Users/chernykh/Downloads/geckodriver-v0.30.0-win64/geckodriver.exe");
+        DesiredCapabilities capabilities = DesiredCapabilities.firefox();
+        capabilities.setCapability("marionette", true);
+        //WebDriver driver = new MarionetteDriver(capabilities);
+        driver = new FirefoxDriver();
+        baseUrl = "https://www.google.com/";
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        driver.get("http://localhost/addressbook/");
+        loginAddressbook("admin", "secret");
+    }
 
-    private void loginAddressbook(String username, String password) {
+    public void loginAddressbook(String username, String password) {
       driver.findElement(By.name("user")).click();
       driver.findElement(By.name("user")).clear();
       driver.findElement(By.name("user")).sendKeys(username);
@@ -53,15 +39,15 @@ public class TestBase {
       driver.findElement(By.xpath("//input[@value='Login']")).click();
     }
 
-    protected void goToGroupsPage() {
+    public void goToGroupsPage() {
       driver.findElement(By.linkText("groups")).click();
     }
 
-    protected void initGroupCreation() {
+    public void initGroupCreation() {
       driver.findElement(By.name("new")).click();
     }
 
-    protected void fillGroupForm(String name, String header, String footer) {
+    public void fillGroupForm(String name, String header, String footer) {
       driver.findElement(By.name("group_name")).click();
       driver.findElement(By.name("group_name")).clear();
       driver.findElement(By.name("group_name")).sendKeys(name);
@@ -73,24 +59,7 @@ public class TestBase {
       driver.findElement(By.name("group_footer")).sendKeys(footer);
     }
 
-    protected void submitGroupCreation() {
-      driver.findElement(By.name("submit")).click();
-    }
-
-    protected void returnToGroupPage() {
-      driver.findElement(By.linkText("group page")).click();
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void tearDown() throws Exception {
-      driver.quit();
-      String verificationErrorString = verificationErrors.toString();
-      if (!"".equals(verificationErrorString)) {
-        fail(verificationErrorString);
-      }
-    }
-
-    protected void fillNewContact(String firstname, String lastname, String nickname, String title, String company, String mobile, String email) {
+    public void fillNewContact(String firstname, String lastname, String nickname, String title, String company, String mobile, String email) {
         driver.findElement(By.name("firstname")).click();
         driver.findElement(By.name("firstname")).clear();
         driver.findElement(By.name("firstname")).sendKeys(firstname);
@@ -126,7 +95,7 @@ public class TestBase {
         driver.findElement(By.id("logo")).click();
     }
 
-    private boolean isElementPresent(By by) {
+    public boolean isElementPresent(By by) {
         try {
             driver.findElement(by);
             return true;
@@ -135,7 +104,7 @@ public class TestBase {
         }
     }
 
-    private boolean isAlertPresent() {
+    public boolean isAlertPresent() {
         try {
             driver.switchTo().alert();
             return true;
@@ -144,7 +113,7 @@ public class TestBase {
         }
     }
 
-    protected String closeAlertAndGetItsText() {
+    public String closeAlertAndGetItsText() {
         try {
             Alert alert = driver.switchTo().alert();
             String alertText = alert.getText();
@@ -156,6 +125,22 @@ public class TestBase {
             return alertText;
         } finally {
             acceptNextAlert = true;
+        }
+    }
+
+    public void submitGroupCreation() {
+      driver.findElement(By.name("submit")).click();
+    }
+
+    public void returnToGroupPage() {
+      driver.findElement(By.linkText("group page")).click();
+    }
+
+    public void stop() {
+        driver.quit();
+        String verificationErrorString = verificationErrors.toString();
+        if (!"".equals(verificationErrorString)) {
+          fail(verificationErrorString);
         }
     }
 }
